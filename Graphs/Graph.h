@@ -1,5 +1,7 @@
 #pragma once
 
+#include <algorithm>
+
 #include "IFileReader.h"
 #include "Edges.h"
 

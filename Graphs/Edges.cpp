@@ -42,3 +42,7 @@ int HalfEdge::GetEndVertex(){
 int HalfEdge::GetWeight(){
     return Weight;
 }
+
+bool HalfEdge::operator < (const HalfEdge& other) const{
+	return EndVertex < other.EndVertex;
+}

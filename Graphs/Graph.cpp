@@ -78,6 +78,11 @@ void Graph::SortEdges(const Edge* unsortedEdges){
 		*(pointers[edge->GetStartVertex()]++) = HalfEdge(edge->GetEndVertex(), edge->GetWeight());
 	}
 
+	for (int i = 0; i < this->vertexNumber; ++i){
+		HalfEdge* end = this->fromVertexToEdgeList[i] + GetVertexDegree(i);
+		std::sort(this->fromVertexToEdgeList[i], end);
+	}
+
 	delete[] count;
 	delete[] pointers;
 }

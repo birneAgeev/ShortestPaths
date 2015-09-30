@@ -19,6 +19,7 @@ struct HalfEdge{
 public:
     HalfEdge();
     HalfEdge(int endVertex, int weight);
+	bool operator < (const HalfEdge& other) const;
     int GetEndVertex();
     int GetWeight();
 
