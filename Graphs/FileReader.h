@@ -15,7 +15,7 @@ public:
     void Open(const char* fileName);
     void Close();
     char NextChar();
-    int NextInt();
+    unsigned int NextUnsignedInt();
     std::string ReadLine();
     bool IsEof();
 

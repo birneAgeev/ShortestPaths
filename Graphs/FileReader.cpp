@@ -4,13 +4,13 @@
 
 FileReader::FileReader(){
     input = NULL;
-    buffer = new char[BUFFER_SIZE];
-    memset(buffer, 0, BUFFER_SIZE);
+    buffer = new char[BUFFER_SIZE + 1];
+    memset(buffer, 0, BUFFER_SIZE + 1);
 }
 
 FileReader::FileReader(FILE* input){
     this->input = input;
-    memset(buffer, 0, BUFFER_SIZE);
+    memset(buffer, 0, BUFFER_SIZE + 1);
 }
 
 FileReader::~FileReader(){
@@ -40,8 +40,8 @@ void FileReader::EnsureCapacity(){
     if(residualSize < CRITCAL_CAPACITY){
         memcpy(buffer, currentPosition, residualSize);
         int readCount = fread(buffer + residualSize, 1, BUFFER_SIZE - residualSize, input);
-		if (readCount < BUFFER_SIZE)
-			buffer[readCount] = (char)0;
+		if (readCount < BUFFER_SIZE - residualSize)
+			buffer[residualSize + readCount] = (char)0;
         currentPosition = buffer;
     }
 }
@@ -57,19 +57,15 @@ char FileReader::NextChar(){
     return *(currentPosition++);
 }
 
-int FileReader::NextInt() {
+unsigned int FileReader::NextUnsignedInt() {
     EnsureCapacity();
 	while (*currentPosition <= ' ' && !IsEof())
         ++currentPosition;
-    bool sign = false;
-    if(*currentPosition == '-') {
-        sign = true;
-        ++currentPosition;
-    }
+
     int result = 0;
     while(*currentPosition > ' ')
         result = result * 10 + (*(currentPosition++) & 15);
-    return sign ? -result : result;
+    return result;
 }
 
 std::string FileReader::ReadLine(){

@@ -14,9 +14,9 @@ Graph::Graph(IFileReader& fileReader){
             fileReader.ReadLine();
         }
         else if(c == 'a'){
-            int from = fileReader.NextInt() - 1;
-            int to = fileReader.NextInt() - 1;
-            int weight = fileReader.NextInt();
+            int from = fileReader.NextUnsignedInt() - 1;
+            int to = fileReader.NextUnsignedInt() - 1;
+            int weight = fileReader.NextUnsignedInt();
 
             if(from >= this->vertexNumber || to >= this->vertexNumber ||
                 edgesInFile >= this->edgesNumber)
@@ -28,15 +28,14 @@ Graph::Graph(IFileReader& fileReader){
             fileReader.NextChar();
             fileReader.NextChar();
 
-            this->vertexNumber = fileReader.NextInt();
-            this->edgesNumber = fileReader.NextInt();
+            this->vertexNumber = fileReader.NextUnsignedInt();
+            this->edgesNumber = fileReader.NextUnsignedInt();
             
             unsortedEdges = new Edge[this->edgesNumber];
             this->edges = new HalfEdge[this->edgesNumber];
             this->fromVertexToEdgeList = new HalfEdge*[this->vertexNumber];
         }
     }
-
 	SortEdges(unsortedEdges);
 
     delete[] unsortedEdges;
