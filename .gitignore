@@ -1,0 +1,15 @@
+bin
+obj
+[Dd]ebug
+[Rr]elease
+rdtsc64_*.dll
+rdtsc64_*.pdb
+rdtsc32_*.dll
+rdtsc32_*.pdb
+*.suo
+*.gr
+desktop.ini
+.screenshots
+.failedMessages
+*.user
+_ReSharper.*
