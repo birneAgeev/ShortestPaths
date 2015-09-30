@@ -1,0 +1,8 @@
+c  asdfjhasdkfjha
+c
+p sp 4 4
+a 3 4 100
+a 4 1 100
+a 1 2 100
+a 2 3 100
+c end
