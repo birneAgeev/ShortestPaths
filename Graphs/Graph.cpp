@@ -47,16 +47,34 @@ Graph::~Graph(){
     delete[] fromVertexToEdgeList;
 }
 
-HalfEdge* &Graph::operator[](int vertexIndex) const{
+void Graph::ThrowIfBadVertexIndex(int vertexIndex) const{
 	if (vertexIndex < 0 || vertexIndex >= this->vertexNumber)
 		throw "Bad vertex index";
+}
+
+HalfEdge* &Graph::operator[](int vertexIndex) const{
+	ThrowIfBadVertexIndex(vertexIndex);
 	return fromVertexToEdgeList[vertexIndex];
 }
 
-int Graph::GetVertexDegree(int vertexIndex){
+int Graph::GetVertexDegree(int vertexIndex) const{
 	if (vertexIndex == this->vertexNumber - 1)
 		return (int)(this->edges + this->edgesNumber - fromVertexToEdgeList[vertexIndex]);
 	return (int)(fromVertexToEdgeList[vertexIndex + 1] - fromVertexToEdgeList[vertexIndex]);
+}
+
+HalfEdge* Graph::SearchEdge(int startVertex, int endVertex) const{
+	ThrowIfBadVertexIndex(startVertex);
+	ThrowIfBadVertexIndex(endVertex);
+
+	int startVertexDegree = GetVertexDegree(startVertex);
+	HalfEdge* adjacencyArray = this->fromVertexToEdgeList[startVertex];
+	HalfEdge* result = std::lower_bound(adjacencyArray, adjacencyArray + startVertexDegree, HalfEdge(endVertex, 0));
+
+	if (adjacencyArray + startVertexDegree <= result || result->GetEndVertex() != endVertex)
+		return NULL;
+
+	return result;
 }
 
 void Graph::SortEdges(const Edge* unsortedEdges){

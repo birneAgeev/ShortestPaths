@@ -10,10 +10,12 @@ public:
     Graph(IFileReader& fileReader);
     virtual ~Graph();
 	HalfEdge* &operator[](int vertexIndex) const;
-	int GetVertexDegree(int vertexIndex);
+	int GetVertexDegree(int vertexIndex) const;
+	HalfEdge* SearchEdge(int startVetex, int ednVertex) const;
 
 private:
 	void SortEdges(const Edge* unsortedEdges);
+	void ThrowIfBadVertexIndex(int vertexIndex) const;
 
     HalfEdge* edges;
     HalfEdge** fromVertexToEdgeList;
