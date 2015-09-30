@@ -27,9 +27,6 @@
     <ClCompile Include="Edges.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="BoostFileReader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Graph.h">
@@ -42,9 +39,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="IFileReader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="BoostFileReader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

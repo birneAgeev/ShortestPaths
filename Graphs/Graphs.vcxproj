@@ -73,7 +73,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="BoostFileReader.cpp" />
     <ClCompile Include="Edges.cpp" />
     <ClCompile Include="EntryPoint.cpp" />
     <ClCompile Include="FileReader.cpp" />
@@ -81,7 +80,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Edges.h" />
-    <ClInclude Include="BoostFileReader.h" />
     <ClInclude Include="FileReader.h" />
     <ClInclude Include="Graph.h" />
     <ClInclude Include="IFileReader.h" />
