@@ -11,7 +11,7 @@ public:
     virtual ~Graph();
 	HalfEdge* &operator[](int vertexIndex) const;
 	int GetVertexDegree(int vertexIndex) const;
-	HalfEdge* SearchEdge(int startVetex, int ednVertex) const;
+	HalfEdge* SearchEdge(int startVetex, int endVertex) const;
 	int GetVertexNumber() const;
 	int GetEdgesNumber() const;
 
