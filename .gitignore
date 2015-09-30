@@ -8,6 +8,12 @@ rdtsc32_*.dll
 rdtsc32_*.pdb
 *.suo
 *.gr
+ipch/
+*.aps
+*.ncb
+*.opensdf
+*.sdf
+*.cachefile
 desktop.ini
 .screenshots
 .failedMessages
