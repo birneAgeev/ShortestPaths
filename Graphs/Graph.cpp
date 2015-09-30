@@ -46,6 +46,14 @@ Graph::~Graph(){
     delete[] fromVertexToEdgeList;
 }
 
+int Graph::GetVertexNumber() const{
+	return this->vertexNumber;
+}
+
+int Graph::GetEdgesNumber() const{
+	return this->edgesNumber;
+}
+
 void Graph::ThrowIfBadVertexIndex(int vertexIndex) const{
 	if (vertexIndex < 0 || vertexIndex >= this->vertexNumber)
 		throw "Bad vertex index";

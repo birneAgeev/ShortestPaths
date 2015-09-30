@@ -12,6 +12,8 @@ public:
 	HalfEdge* &operator[](int vertexIndex) const;
 	int GetVertexDegree(int vertexIndex) const;
 	HalfEdge* SearchEdge(int startVetex, int ednVertex) const;
+	int GetVertexNumber() const;
+	int GetEdgesNumber() const;
 
 private:
 	void SortEdges(const Edge* unsortedEdges);
