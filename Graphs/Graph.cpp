@@ -1,44 +1,45 @@
 #include "Graph.h"
 
-Graph::Graph(IFileReader& fileReader){
-    this->vertexNumber = 0;
-    this->edgesNumber = 0;
-    this->edges = NULL;
-    this->fromVertexToEdgeList = NULL;
+Graph::Graph(IFileReader& fileReader) {
+	this->vertexNumber = 0;
+	this->edgesNumber = 0;
+	this->edges = nullptr;
+	this->fromVertexToEdgeList = nullptr;
 
-    Edge* unsortedEdges = NULL;
-    int edgesInFile = 0;
-    while(!fileReader.IsEof()){
-        char c = fileReader.NextChar();
-        if(c == 'c'){
-            fileReader.ReadLine();
-        }
-        else if(c == 'a'){
-            int from = fileReader.NextUnsignedInt() - 1;
-            int to = fileReader.NextUnsignedInt() - 1;
-            int weight = fileReader.NextUnsignedInt();
+	Edge* unsortedEdges = nullptr;
+	int edgesInFile = 0;
+	while (char c = fileReader.NextChar()) {
+		if (c == 'c') {
+			fileReader.ReadLine();
+		}
+		else if (c == 'a') {
+			int from = fileReader.NextUnsignedInt() - 1;
+			int to = fileReader.NextUnsignedInt() - 1;
+			int weight = fileReader.NextUnsignedInt();
 
-            if(from >= this->vertexNumber || to >= this->vertexNumber ||
-                edgesInFile >= this->edgesNumber)
-                continue;
+			if (from >= this->vertexNumber || to >= this->vertexNumber ||
+				edgesInFile >= this->edgesNumber)
+				throw std::runtime_error("Unexpected arc definition");
 
-            unsortedEdges[edgesInFile++] = Edge(from, to, weight);
-        }
-        else if(c == 'p'){
-            fileReader.NextChar();
-            fileReader.NextChar();
+			unsortedEdges[edgesInFile++] = Edge(from, to, weight);
+		}
+		else if (c == 'p') {
+			fileReader.NextChar();
+			fileReader.NextChar();
 
-            this->vertexNumber = fileReader.NextUnsignedInt();
-            this->edgesNumber = fileReader.NextUnsignedInt();
-            
-            unsortedEdges = new Edge[this->edgesNumber];
-            this->edges = new HalfEdge[this->edgesNumber];
-            this->fromVertexToEdgeList = new HalfEdge*[this->vertexNumber];
-        }
-    }
+			this->vertexNumber = fileReader.NextUnsignedInt();
+			this->edgesNumber = fileReader.NextUnsignedInt();
+
+			unsortedEdges = new Edge[this->edgesNumber];
+			this->edges = new HalfEdge[this->edgesNumber];
+			this->fromVertexToEdgeList = new HalfEdge*[this->vertexNumber];
+		}
+		else
+			throw std::runtime_error("Unexpected token " + c);
+	}
 	SortEdges(unsortedEdges);
 
-    delete[] unsortedEdges;
+	delete[] unsortedEdges;
 }
 
 Graph::~Graph(){
@@ -56,7 +57,7 @@ int Graph::GetEdgesNumber() const{
 
 void Graph::ThrowIfBadVertexIndex(int vertexIndex) const{
 	if (vertexIndex < 0 || vertexIndex >= this->vertexNumber)
-		throw "Bad vertex index";
+		throw std::runtime_error("Bad vertex index");
 }
 
 HalfEdge* &Graph::operator[](int vertexIndex) const{
@@ -79,7 +80,7 @@ HalfEdge* Graph::SearchEdge(int startVertex, int endVertex) const{
 	HalfEdge* result = std::lower_bound(adjacencyArray, adjacencyArray + startVertexDegree, HalfEdge(endVertex, 0));
 
 	if (adjacencyArray + startVertexDegree <= result || result->GetEndVertex() != endVertex)
-		return NULL;
+		return nullptr;
 
 	return result;
 }
