@@ -21,12 +21,7 @@ namespace GraphStatistics {
 	}
 
 	double GetAverageVertexDegree(const Graph& graph) {
-		double sumDegrees = 0;
-		for (int i = 0; i < graph.GetVertexCount(); ++i) {
-			sumDegrees += (double)graph.GetVertexDegree(i);
-		}
-
-		return sumDegrees / (double)graph.GetVertexCount();
+		return (double) graph.GetLinksCount() / (double)graph.GetVertexCount();
 	}
 
 	int GetSingleOrientedEdgesCount(const Graph& graph) {
