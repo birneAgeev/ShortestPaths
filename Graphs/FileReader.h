@@ -24,8 +24,8 @@ private:
 	void SkipWhitespaces();
 
 	FILE* input;
-	static const int BUFFER_SIZE = 1000000;
-	const int CRITICAL_CAPACITY = 100;
+	static const int BUFFER_SIZE = 10000000;
+	static const int CRITICAL_CAPACITY = 100;
 	char* buffer;
 	char* currentPosition;
 };
