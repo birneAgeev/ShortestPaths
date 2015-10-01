@@ -27,7 +27,7 @@
     <ClCompile Include="Edges.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="GraphStatisticsCalculator.cpp">
+    <ClCompile Include="GraphStatistics.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -44,7 +44,7 @@
     <ClInclude Include="IFileReader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="GraphStatisticsCalculator.h">
+    <ClInclude Include="GraphStatistics.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

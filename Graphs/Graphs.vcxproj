@@ -77,13 +77,13 @@
     <ClCompile Include="EntryPoint.cpp" />
     <ClCompile Include="FileReader.cpp" />
     <ClCompile Include="Graph.cpp" />
-    <ClCompile Include="GraphStatisticsCalculator.cpp" />
+    <ClCompile Include="GraphStatistics.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Edges.h" />
     <ClInclude Include="FileReader.h" />
     <ClInclude Include="Graph.h" />
-    <ClInclude Include="GraphStatisticsCalculator.h" />
+    <ClInclude Include="GraphStatistics.h" />
     <ClInclude Include="IFileReader.h" />
   </ItemGroup>
   <ItemGroup>
