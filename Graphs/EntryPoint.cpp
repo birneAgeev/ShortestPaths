@@ -16,17 +16,19 @@ int main() {
 	fileReader.Open("osm-bawu.gr");
 	//fileReader.Open("osm-ger.gr");
 
-	Graph g = Graph(fileReader);
+	Graph* g = Graph::ReadFrom(fileReader);
 
 	fileReader.Close();
 
-	printf("Max Degree: %d\n", GraphStatistics::GetMaximalVertexDegree(g));
-	printf("Min Degree: %d\n", GraphStatistics::GetMinimalVertexDegree(g));
-	printf("Average Degree: %.3lf\n", GraphStatistics::GetAverageVertexDegree(g));
-	printf("Single oriented edges count: %d\n", GraphStatistics::GetSingleOrientedEdgesCount(g));
+	printf("Max Degree: %d\n", GraphStatistics::GetMaximalVertexDegree(*g));
+	printf("Min Degree: %d\n", GraphStatistics::GetMinimalVertexDegree(*g));
+	printf("Average Degree: %.3lf\n", GraphStatistics::GetAverageVertexDegree(*g));
+	printf("Single oriented edges count: %d\n", GraphStatistics::GetSingleOrientedEdgesCount(*g));
 
 	printf("Elapsed time: %.3lf\n", (clock() - time) / CLOCKS_PER_SEC);
 	scanf("%lf", &time);
+
+	delete g;
 
 	return 0;
 }

@@ -5,7 +5,10 @@
 
 class Graph {
 public:
-	Graph(IReader& reader);
+	class Builder;
+
+	static Graph* ReadFrom(IReader& reader);
+
 	virtual ~Graph();
 	Link* & operator[](int vertexIndex) const;
 	int GetVertexDegree(int vertexIndex) const;
@@ -14,11 +17,26 @@ public:
 	int GetLinksCount() const;
 
 private:
-	void SortArcs(const Arc* unsortedEdges);
+	Graph();
 	void CheckVertexIndex(int vertexIndex) const;
 
 	Link* links;
 	Link** linksStarts;
 	int vertexCount;
 	int linksCount;
+};
+
+class Graph::Builder {
+public:
+	Builder(int vertexCount, int arcsCapacity);
+	virtual ~Builder();
+	void AddArc(const Arc &arc);
+	Graph* Build();
+private:
+	void SortArcsAndCopyTo(Graph* graph);
+
+	Arc* unsortedArcs;
+	int vertexCount;
+	int arcsCount;
+	int arcsCapacity;
 };

@@ -1,46 +1,11 @@
 #include "Graph.h"
 #include <algorithm>
 
-Graph::Graph(IReader& reader) {
+Graph::Graph() {
 	this->vertexCount = 0;
 	this->linksCount = 0;
 	this->links = nullptr;
 	this->linksStarts = nullptr;
-
-	Arc* unsortedArcs = nullptr;
-	int arcsInFile = 0;
-	while (char c = reader.NextChar()) {
-		if (c == 'c') {
-			reader.ReadLine();
-		}
-		else if (c == 'a') {
-			int from = reader.NextUnsignedInt();
-			int to = reader.NextUnsignedInt();
-			int weight = reader.NextUnsignedInt();
-
-			if (from >= this->vertexCount || to >= this->vertexCount ||
-				arcsInFile >= this->linksCount)
-				throw std::runtime_error("Unexpected arc definition");
-
-			unsortedArcs[arcsInFile++] = Arc(from, to, weight);
-		}
-		else if (c == 'p') {
-			reader.NextChar();
-			reader.NextChar();
-
-			this->vertexCount = reader.NextUnsignedInt() + 1;
-			this->linksCount = reader.NextUnsignedInt();
-
-			unsortedArcs = new Arc[this->linksCount];
-			this->links = new Link[this->linksCount];
-			this->linksStarts = new Link*[this->vertexCount];
-		}
-		else
-			throw std::runtime_error("Unexpected token " + c);
-	}
-	SortArcs(unsortedArcs);
-
-	delete[] unsortedArcs;
 }
 
 Graph::~Graph() {
@@ -86,19 +51,88 @@ Link* Graph::FindLink(int startVertex, int endVertex) const {
 	return result;
 }
 
-void Graph::SortArcs(const Arc* unsortedArcs) {
+Graph* Graph::ReadFrom(IReader& reader) {
+	Builder* builder = nullptr;
+
+	while (char c = reader.NextChar()) {
+		switch (c) {
+			case 'c': {
+				reader.ReadLine();
+				break;
+			}
+			case 'p': {
+				reader.NextChar();
+				reader.NextChar();
+
+				int vertexCount = reader.NextUnsignedInt() + 1;
+				int linksCount = reader.NextUnsignedInt();
+
+				builder = new Builder(vertexCount, linksCount);
+				break;
+			}
+			case 'a': {
+				int from = reader.NextUnsignedInt();
+				int to = reader.NextUnsignedInt();
+				int weight = reader.NextUnsignedInt();
+
+				builder->AddArc(Arc(from, to, weight));
+				break;
+			}
+			default:
+				throw std::runtime_error("Unexpected token " + c);
+		}
+	}
+
+	Graph* graph = builder->Build();
+
+	delete builder;
+	return graph;
+}
+
+Graph::Builder::Builder(int vertexCount, int arcsCapacity) {
+	this->unsortedArcs = new Arc[arcsCapacity];
+	this->vertexCount = vertexCount;
+	this->arcsCapacity = arcsCapacity;
+	this->arcsCount = 0;
+}
+
+Graph::Builder::~Builder() {
+	delete[] unsortedArcs;
+}
+
+void Graph::Builder::AddArc(const Arc& arc) {
+	if (arc.GetStart() >= this->vertexCount ||
+		arc.GetEnd() >= this->vertexCount ||
+		arcsCount >= this->arcsCapacity)
+		throw std::runtime_error("Unexpected arc definition");
+	unsortedArcs[arcsCount++] = arc;
+}
+
+Graph* Graph::Builder::Build() {
+	Graph* graph = new Graph();
+	graph->vertexCount = this->vertexCount;
+	graph->linksCount = this->arcsCount;
+	graph->links = new Link[this->arcsCount];
+	graph->linksStarts = new Link*[this->vertexCount];
+
+	SortArcsAndCopyTo(graph);
+
+	return graph;
+}
+
+void Graph::Builder::SortArcsAndCopyTo(Graph* graph) {
 	int* degreeCounts = new int[this->vertexCount];
 	Link** linksPointers = new Link*[this->vertexCount];
 
 	memset(degreeCounts, 0, this->vertexCount * sizeof(int));
-	const Arc* arcsEnd = unsortedArcs + this->linksCount;
+	const Arc* arcsEnd = unsortedArcs + this->arcsCount;
 	for (const Arc* edge = unsortedArcs; edge != arcsEnd; ++edge) {
 		++degreeCounts[edge->GetStart()];
 	}
 
-	this->linksStarts[0] = linksPointers[0] = links;
+	graph->linksStarts[0] = linksPointers[0] = graph->links;
 	for (int i = 1; i < this->vertexCount; ++i) {
-		this->linksStarts[i] = linksPointers[i] = linksPointers[i - 1] + degreeCounts[i];
+		graph->linksStarts[i] = linksPointers[i] = linksPointers[i - 1] + degreeCounts[i - 1];
 	}
 
 	for (const Arc* edge = unsortedArcs; edge != arcsEnd; ++edge) {
@@ -106,8 +140,8 @@ void Graph::SortArcs(const Arc* unsortedArcs) {
 	}
 
 	for (int i = 0; i < this->vertexCount; ++i) {
-		Link* linksEnd = this->linksStarts[i] + GetVertexDegree(i);
-		std::sort(this->linksStarts[i], linksEnd);
+		Link* linksEnd = graph->linksStarts[i] + graph->GetVertexDegree(i);
+		std::sort(graph->linksStarts[i], linksEnd);
 	}
 
 	delete[] degreeCounts;
