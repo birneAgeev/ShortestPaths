@@ -8,17 +8,17 @@
 #include "Graph.h"
 #include "GraphStatisticsCalculator.h"
 
-int main(){
+int main() {
 	double time = clock();
 
-    FileReader fileReader;
-    //fileReader.Open("input.txt");
+	FileReader fileReader;
+	//fileReader.Open("input.txt");
 	fileReader.Open("osm-bawu.gr");
 	//fileReader.Open("osm-ger.gr");
 
-    Graph g = Graph(fileReader);
+	Graph g = Graph(fileReader);
 
-    fileReader.Close();
+	fileReader.Close();
 
 	printf("Max Degree: %d\n", GraphStatisticsCalculator::GetMaximalVertexDegree(g));
 	printf("Min Degree: %d\n", GraphStatisticsCalculator::GetMinimalVertexDegree(g));
@@ -28,5 +28,5 @@ int main(){
 	printf("Elapsed time: %.3lf\n", (clock() - time) / CLOCKS_PER_SEC);
 	scanf("%lf", &time);
 
-    return 0;
+	return 0;
 }

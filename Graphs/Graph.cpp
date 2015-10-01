@@ -1,13 +1,14 @@
 #include "Graph.h"
+#include <algorithm>
 
 Graph::Graph(IFileReader& fileReader) {
-	this->vertexNumber = 0;
-	this->edgesNumber = 0;
-	this->edges = nullptr;
-	this->fromVertexToEdgeList = nullptr;
+	this->vertexCount = 0;
+	this->linksCount = 0;
+	this->links = nullptr;
+	this->linksStarts = nullptr;
 
-	Edge* unsortedEdges = nullptr;
-	int edgesInFile = 0;
+	Arc* unsortedArcs = nullptr;
+	int arcsInFile = 0;
 	while (char c = fileReader.NextChar()) {
 		if (c == 'c') {
 			fileReader.ReadLine();
@@ -17,98 +18,98 @@ Graph::Graph(IFileReader& fileReader) {
 			int to = fileReader.NextUnsignedInt() - 1;
 			int weight = fileReader.NextUnsignedInt();
 
-			if (from >= this->vertexNumber || to >= this->vertexNumber ||
-				edgesInFile >= this->edgesNumber)
+			if (from >= this->vertexCount || to >= this->vertexCount ||
+				arcsInFile >= this->linksCount)
 				throw std::runtime_error("Unexpected arc definition");
 
-			unsortedEdges[edgesInFile++] = Edge(from, to, weight);
+			unsortedArcs[arcsInFile++] = Arc(from, to, weight);
 		}
 		else if (c == 'p') {
 			fileReader.NextChar();
 			fileReader.NextChar();
 
-			this->vertexNumber = fileReader.NextUnsignedInt();
-			this->edgesNumber = fileReader.NextUnsignedInt();
+			this->vertexCount = fileReader.NextUnsignedInt();
+			this->linksCount = fileReader.NextUnsignedInt();
 
-			unsortedEdges = new Edge[this->edgesNumber];
-			this->edges = new HalfEdge[this->edgesNumber];
-			this->fromVertexToEdgeList = new HalfEdge*[this->vertexNumber];
+			unsortedArcs = new Arc[this->linksCount];
+			this->links = new Link[this->linksCount];
+			this->linksStarts = new Link*[this->vertexCount];
 		}
 		else
 			throw std::runtime_error("Unexpected token " + c);
 	}
-	SortEdges(unsortedEdges);
+	SortArcs(unsortedArcs);
 
-	delete[] unsortedEdges;
+	delete[] unsortedArcs;
 }
 
-Graph::~Graph(){
-    delete[] edges;
-    delete[] fromVertexToEdgeList;
+Graph::~Graph() {
+	delete[] links;
+	delete[] linksStarts;
 }
 
-int Graph::GetVertexNumber() const{
-	return this->vertexNumber;
+int Graph::GetVertexCount() const {
+	return this->vertexCount;
 }
 
-int Graph::GetEdgesNumber() const{
-	return this->edgesNumber;
+int Graph::GetLinksCount() const {
+	return this->linksCount;
 }
 
-void Graph::ThrowIfBadVertexIndex(int vertexIndex) const{
-	if (vertexIndex < 0 || vertexIndex >= this->vertexNumber)
+void Graph::CheckVertexIndex(int vertexIndex) const {
+	if (vertexIndex < 0 || vertexIndex >= this->vertexCount)
 		throw std::runtime_error("Bad vertex index");
 }
 
-HalfEdge* &Graph::operator[](int vertexIndex) const{
-	ThrowIfBadVertexIndex(vertexIndex);
-	return fromVertexToEdgeList[vertexIndex];
+Link* & Graph::operator[](int vertexIndex) const {
+	CheckVertexIndex(vertexIndex);
+	return linksStarts[vertexIndex];
 }
 
-int Graph::GetVertexDegree(int vertexIndex) const{
-	if (vertexIndex == this->vertexNumber - 1)
-		return (int)(this->edges + this->edgesNumber - fromVertexToEdgeList[vertexIndex]);
-	return (int)(fromVertexToEdgeList[vertexIndex + 1] - fromVertexToEdgeList[vertexIndex]);
+int Graph::GetVertexDegree(int vertexIndex) const {
+	if (vertexIndex == this->vertexCount - 1)
+		return (int)(this->links + this->linksCount - linksStarts[vertexIndex]);
+	return (int)(linksStarts[vertexIndex + 1] - linksStarts[vertexIndex]);
 }
 
-HalfEdge* Graph::SearchEdge(int startVertex, int endVertex) const{
-	ThrowIfBadVertexIndex(startVertex);
-	ThrowIfBadVertexIndex(endVertex);
+Link* Graph::FindLink(int startVertex, int endVertex) const {
+	CheckVertexIndex(startVertex);
+	CheckVertexIndex(endVertex);
 
 	int startVertexDegree = GetVertexDegree(startVertex);
-	HalfEdge* adjacencyArray = this->fromVertexToEdgeList[startVertex];
-	HalfEdge* result = std::lower_bound(adjacencyArray, adjacencyArray + startVertexDegree, HalfEdge(endVertex, 0));
+	Link* adjacencyArray = this->linksStarts[startVertex];
+	Link* result = std::lower_bound(adjacencyArray, adjacencyArray + startVertexDegree, Link(endVertex, 0));
 
-	if (adjacencyArray + startVertexDegree <= result || result->GetEndVertex() != endVertex)
+	if (adjacencyArray + startVertexDegree <= result || result->GetTarget() != endVertex)
 		return nullptr;
 
 	return result;
 }
 
-void Graph::SortEdges(const Edge* unsortedEdges){
-	int* count = new int[this->vertexNumber];
-	HalfEdge** pointers = new HalfEdge*[this->vertexNumber];
+void Graph::SortArcs(const Arc* unsortedArcs) {
+	int* degreeCounts = new int[this->vertexCount];
+	Link** linksPointers = new Link*[this->vertexCount];
 
-	memset(count, 0, this->vertexNumber * sizeof(int));
-	const Edge* end = unsortedEdges + this->edgesNumber;
-	for (const Edge* edge = unsortedEdges; edge != end; ++edge){
-		++count[edge->GetStartVertex()];
+	memset(degreeCounts, 0, this->vertexCount * sizeof(int));
+	const Arc* arcsEnd = unsortedArcs + this->linksCount;
+	for (const Arc* edge = unsortedArcs; edge != arcsEnd; ++edge) {
+		++degreeCounts[edge->GetStart()];
 	}
 
-	this->fromVertexToEdgeList[0] = pointers[0] = edges;
-	for (int i = 1; i < this->vertexNumber; ++i){
-		this->fromVertexToEdgeList[i] = pointers[i] = pointers[i - 1] + count[i];
+	this->linksStarts[0] = linksPointers[0] = links;
+	for (int i = 1; i < this->vertexCount; ++i) {
+		this->linksStarts[i] = linksPointers[i] = linksPointers[i - 1] + degreeCounts[i];
 	}
 
-	for (const Edge* edge = unsortedEdges; edge != end; ++edge){
-		*(pointers[edge->GetStartVertex()]++) = HalfEdge(edge->GetEndVertex(), edge->GetWeight());
+	for (const Arc* edge = unsortedArcs; edge != arcsEnd; ++edge) {
+		*(linksPointers[edge->GetStart()]++) = Link(edge->GetEnd(), edge->GetWeight());
 	}
 
-	for (int i = 0; i < this->vertexNumber; ++i){
-		HalfEdge* end = this->fromVertexToEdgeList[i] + GetVertexDegree(i);
-		std::sort(this->fromVertexToEdgeList[i], end);
+	for (int i = 0; i < this->vertexCount; ++i) {
+		Link* linksEnd = this->linksStarts[i] + GetVertexDegree(i);
+		std::sort(this->linksStarts[i], linksEnd);
 	}
 
-	delete[] count;
-	delete[] pointers;
+	delete[] degreeCounts;
+	delete[] linksPointers;
 }

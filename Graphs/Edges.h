@@ -1,29 +1,29 @@
 #pragma once
 
-class Edge{
+struct Arc {
 public:
-    Edge();
-    Edge(int startVertex, int endVertex, int weight);
-    bool operator < (const Edge& other) const;
-    int GetStartVertex() const;
-    int GetEndVertex() const;
-    int GetWeight() const;
+	Arc();
+	Arc(int start, int end, int weight);
+	int GetStart() const;
+	int GetEnd() const;
+	int GetWeight() const;
 
+	bool operator< (const Arc &arc) const;
 private:
-    int StartVertex;
-    int EndVertex;
-    int Weight;
+	int Start;
+	int End;
+	int Weight;
 };
 
-struct HalfEdge{
+struct Link {
 public:
-    HalfEdge();
-    HalfEdge(int endVertex, int weight);
-	bool operator < (const HalfEdge& other) const;
-    int GetEndVertex();
-    int GetWeight();
+	Link();
+	Link(int target, int weight);
+	int GetTarget() const;
+	int GetWeight() const;
 
+	bool operator< (const Link &link) const;
 private:
-    int EndVertex;
-    int Weight;
+	int Target;
+	int Weight;
 };

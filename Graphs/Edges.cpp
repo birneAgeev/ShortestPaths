@@ -1,48 +1,48 @@
 #include "Edges.h"
 
-Edge::Edge(){
-    StartVertex = EndVertex = Weight = -1;
+Arc::Arc() {
+	Start = End = Weight = -1;
 }
 
-Edge::Edge(int startVertex, int endVertex, int weight){
-    StartVertex = startVertex;
-    EndVertex = endVertex;
-    Weight = weight;
+Arc::Arc(int start, int end, int weight) {
+	Start = start;
+	End = end;
+	Weight = weight;
 }
 
-bool Edge::operator < (const Edge& other) const{
-    return StartVertex < other.StartVertex;
+int Arc::GetStart() const {
+	return Start;
 }
 
-int Edge::GetStartVertex() const{
-    return StartVertex;
+int Arc::GetEnd() const {
+	return End;
 }
 
-int Edge::GetEndVertex() const{
-    return EndVertex;
+int Arc::GetWeight() const {
+	return Weight;
 }
 
-int Edge::GetWeight() const{
-    return Weight;
+bool Arc::operator<(const Arc& arc) const {
+	return Start < arc.Start;
 }
 
-HalfEdge::HalfEdge(){
-    EndVertex = Weight = 0;
+Link::Link() {
+	Target = Weight = 0;
 }
 
-HalfEdge::HalfEdge(int endVertex, int weight){
-    EndVertex = endVertex;
-    Weight = weight;
+Link::Link(int target, int weight) {
+	Target = target;
+	Weight = weight;
 }
 
-int HalfEdge::GetEndVertex(){
-    return EndVertex;
+int Link::GetTarget() const {
+	return Target;
 }
 
-int HalfEdge::GetWeight(){
-    return Weight;
+int Link::GetWeight() const {
+	return Weight;
 }
 
-bool HalfEdge::operator < (const HalfEdge& other) const{
-	return EndVertex < other.EndVertex;
+bool Link::operator<(const Link& link) const {
+	return Target < link.Target;
 }

@@ -2,6 +2,9 @@
 
 #include "FileReader.h"
 
+#include <cstdio>
+#include <iostream>
+
 FileReader::FileReader() {
 	input = nullptr;
 	buffer = new char[BUFFER_SIZE + 1];

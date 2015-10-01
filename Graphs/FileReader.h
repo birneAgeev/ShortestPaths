@@ -1,9 +1,5 @@
 #pragma once
 
-#include <cstdio>
-#include <fstream>
-#include <iostream>
-
 #include "IFileReader.h"
 
 class FileReader : public IFileReader {

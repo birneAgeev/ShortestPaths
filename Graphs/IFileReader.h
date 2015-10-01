@@ -2,7 +2,7 @@
 
 #include <string>
 
-class IFileReader{
+class IFileReader {
 public:
 	virtual ~IFileReader() {}
 

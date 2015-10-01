@@ -2,7 +2,7 @@
 
 #include "Graph.h"
 
-class GraphStatisticsCalculator{
+class GraphStatisticsCalculator {
 public:
 	static int GetMaximalVertexDegree(const Graph& graph);
 	static int GetMinimalVertexDegree(const Graph& graph);

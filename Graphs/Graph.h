@@ -1,26 +1,24 @@
 #pragma once
 
-#include <algorithm>
-
 #include "IFileReader.h"
 #include "Edges.h"
 
-class Graph{
+class Graph {
 public:
-    Graph(IFileReader& fileReader);
-    virtual ~Graph();
-	HalfEdge* &operator[](int vertexIndex) const;
+	Graph(IFileReader& fileReader);
+	virtual ~Graph();
+	Link* & operator[](int vertexIndex) const;
 	int GetVertexDegree(int vertexIndex) const;
-	HalfEdge* SearchEdge(int startVetex, int endVertex) const;
-	int GetVertexNumber() const;
-	int GetEdgesNumber() const;
+	Link* FindLink(int startVertex, int endVertex) const;
+	int GetVertexCount() const;
+	int GetLinksCount() const;
 
 private:
-	void SortEdges(const Edge* unsortedEdges);
-	void ThrowIfBadVertexIndex(int vertexIndex) const;
+	void SortArcs(const Arc* unsortedEdges);
+	void CheckVertexIndex(int vertexIndex) const;
 
-    HalfEdge* edges;
-    HalfEdge** fromVertexToEdgeList;
-    int vertexNumber;
-    int edgesNumber;
+	Link* links;
+	Link** linksStarts;
+	int vertexCount;
+	int linksCount;
 };
