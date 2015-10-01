@@ -1,19 +1,19 @@
 #pragma once
 
-#include "IFileReader.h"
+#include "IReader.h"
 
-class FileReader : public IFileReader {
+class FileReader : public IReader {
 public:
 	FileReader();
 	FileReader(FILE* input);
 	virtual ~FileReader();
 
-	void Open(const char* fileName) override;
-	void Close() override;
+	void Open(const char* fileName);
+	void Close();
 	char NextChar() override;
 	unsigned int NextUnsignedInt() override;
 	std::string ReadLine() override;
-	bool IsEof() override;
+	bool HasNext() override;
 
 private:
 	void EnsureCapacity();

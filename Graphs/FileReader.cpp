@@ -17,7 +17,7 @@ FileReader::FileReader(FILE* input) {
 }
 
 FileReader::~FileReader() {
-	FileReader::Close();
+	Close();
 	delete[] buffer;
 	currentPosition = nullptr;
 }
@@ -51,25 +51,25 @@ void FileReader::EnsureCapacity() {
 
 
 void FileReader::SkipWhitespaces() {
-	while (*currentPosition <= ' ' && !IsEof())
+	while (*currentPosition <= ' ' && HasNext())
 		++currentPosition;
 }
 
-bool FileReader::IsEof() {
-	return *currentPosition == (char)0 && feof(input) != 0;
+bool FileReader::HasNext() {
+	return *currentPosition != (char)0 || feof(input) == 0;
 }
 
 char FileReader::NextChar() {
 	EnsureCapacity();
 	SkipWhitespaces();
-	if (IsEof()) return 0;
+	if (!HasNext()) return 0;
 	return *(currentPosition++);
 }
 
 unsigned int FileReader::NextUnsignedInt() {
 	EnsureCapacity();
 	SkipWhitespaces();
-	if (IsEof()) return 0;
+	if (!HasNext()) return 0;
 
 	int result = 0;
 	while (*currentPosition > ' ')
@@ -81,15 +81,15 @@ std::string FileReader::ReadLine() {
 	std::string result = "";
 
 	EnsureCapacity();
-	while (*currentPosition != '\r' && *currentPosition != '\n' && !IsEof()) {
+	while (*currentPosition != '\r' && *currentPosition != '\n' && HasNext()) {
 		result += *currentPosition;
 		++currentPosition;
 	}
 
-	if (!IsEof()) {
+	if (HasNext()) {
 		if (*currentPosition == '\r')
-			currentPosition += 2;
-		else
+			++currentPosition;
+		if (*currentPosition == '\n')
 			++currentPosition;
 	}
 	return result;

@@ -1,7 +1,7 @@
 #include "Graph.h"
 #include <algorithm>
 
-Graph::Graph(IFileReader& fileReader) {
+Graph::Graph(IReader& reader) {
 	this->vertexCount = 0;
 	this->linksCount = 0;
 	this->links = nullptr;
@@ -9,14 +9,14 @@ Graph::Graph(IFileReader& fileReader) {
 
 	Arc* unsortedArcs = nullptr;
 	int arcsInFile = 0;
-	while (char c = fileReader.NextChar()) {
+	while (char c = reader.NextChar()) {
 		if (c == 'c') {
-			fileReader.ReadLine();
+			reader.ReadLine();
 		}
 		else if (c == 'a') {
-			int from = fileReader.NextUnsignedInt() - 1;
-			int to = fileReader.NextUnsignedInt() - 1;
-			int weight = fileReader.NextUnsignedInt();
+			int from = reader.NextUnsignedInt() - 1;
+			int to = reader.NextUnsignedInt() - 1;
+			int weight = reader.NextUnsignedInt();
 
 			if (from >= this->vertexCount || to >= this->vertexCount ||
 				arcsInFile >= this->linksCount)
@@ -25,11 +25,11 @@ Graph::Graph(IFileReader& fileReader) {
 			unsortedArcs[arcsInFile++] = Arc(from, to, weight);
 		}
 		else if (c == 'p') {
-			fileReader.NextChar();
-			fileReader.NextChar();
+			reader.NextChar();
+			reader.NextChar();
 
-			this->vertexCount = fileReader.NextUnsignedInt();
-			this->linksCount = fileReader.NextUnsignedInt();
+			this->vertexCount = reader.NextUnsignedInt();
+			this->linksCount = reader.NextUnsignedInt();
 
 			unsortedArcs = new Arc[this->linksCount];
 			this->links = new Link[this->linksCount];

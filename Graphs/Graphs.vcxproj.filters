@@ -41,10 +41,10 @@
     <ClInclude Include="Edges.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="IFileReader.h">
+    <ClInclude Include="GraphStatistics.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="GraphStatistics.h">
+    <ClInclude Include="IReader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

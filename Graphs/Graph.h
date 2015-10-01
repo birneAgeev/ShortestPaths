@@ -1,11 +1,11 @@
 #pragma once
 
-#include "IFileReader.h"
+#include "IReader.h"
 #include "Edges.h"
 
 class Graph {
 public:
-	Graph(IFileReader& fileReader);
+	Graph(IReader& reader);
 	virtual ~Graph();
 	Link* & operator[](int vertexIndex) const;
 	int GetVertexDegree(int vertexIndex) const;

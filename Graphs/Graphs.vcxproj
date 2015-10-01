@@ -84,7 +84,7 @@
     <ClInclude Include="FileReader.h" />
     <ClInclude Include="Graph.h" />
     <ClInclude Include="GraphStatistics.h" />
-    <ClInclude Include="IFileReader.h" />
+    <ClInclude Include="IReader.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="input.txt" />
