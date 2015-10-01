@@ -14,8 +14,8 @@ Graph::Graph(IReader& reader) {
 			reader.ReadLine();
 		}
 		else if (c == 'a') {
-			int from = reader.NextUnsignedInt() - 1;
-			int to = reader.NextUnsignedInt() - 1;
+			int from = reader.NextUnsignedInt();
+			int to = reader.NextUnsignedInt();
 			int weight = reader.NextUnsignedInt();
 
 			if (from >= this->vertexCount || to >= this->vertexCount ||
@@ -28,7 +28,7 @@ Graph::Graph(IReader& reader) {
 			reader.NextChar();
 			reader.NextChar();
 
-			this->vertexCount = reader.NextUnsignedInt();
+			this->vertexCount = reader.NextUnsignedInt() + 1;
 			this->linksCount = reader.NextUnsignedInt();
 
 			unsortedArcs = new Arc[this->linksCount];
