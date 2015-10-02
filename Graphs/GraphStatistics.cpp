@@ -15,7 +15,7 @@ namespace GraphStatistics {
 		int minDegree = 1;
 		for (int i = 0; i < graph.GetVertexCount(); ++i) {
 			int vertexDegree = graph.GetVertexDegree(i);
-			if (vertexDegree > 0) continue;
+			if (vertexDegree > 0)
 				minDegree = std::min(minDegree, vertexDegree);
 		}
 
