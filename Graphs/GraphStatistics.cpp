@@ -12,7 +12,7 @@ namespace GraphStatistics {
 	}
 
 	int GetMinimalVertexDegree(const Graph& graph) {
-		int minDegree = 0;
+		int minDegree = 1;
 		for (int i = 0; i < graph.GetVertexCount(); ++i) {
 			minDegree = std::min(minDegree, graph.GetVertexDegree(i));
 		}
@@ -21,7 +21,13 @@ namespace GraphStatistics {
 	}
 
 	double GetAverageVertexDegree(const Graph& graph) {
-		return (double) graph.GetLinksCount() / (double)graph.GetVertexCount();
+		int nonEmptyVertexCount = 0;
+		for (int i = 0; i < graph.GetVertexCount(); ++i) {
+			if (graph.GetVertexDegree(i) > 0)
+				nonEmptyVertexCount++;
+		}
+
+		return (double) graph.GetLinksCount() / (double)nonEmptyVertexCount;
 	}
 
 	int GetSingleOrientedEdgesCount(const Graph& graph) {
