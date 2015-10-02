@@ -32,6 +32,7 @@ Link* & Graph::operator[](int vertexIndex) const {
 }
 
 int Graph::GetVertexDegree(int vertexIndex) const {
+	CheckVertexIndex(vertexIndex);
 	if (vertexIndex == this->vertexCount - 1)
 		return (int)(this->links + this->linksCount - linksStarts[vertexIndex]);
 	return (int)(linksStarts[vertexIndex + 1] - linksStarts[vertexIndex]);
